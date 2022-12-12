@@ -19,15 +19,15 @@ class FavoriteFragment : Fragment() {
     private val favoriteViewModel: FavoriteViewModel by viewModel()
 
     private var _binding: FragmentFavoriteBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,14 +45,14 @@ class FavoriteFragment : Fragment() {
 
             favoriteViewModel.favoriteMovie.observe(viewLifecycleOwner) { dataMovie ->
                 movieAdapter.setData(dataMovie)
-                binding.viewEmpty.root.visibility =
+                binding?.viewEmpty?.root?.visibility =
                     if (dataMovie.isNotEmpty()) View.GONE else View.VISIBLE
             }
 
-            with(binding.rvMovie) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = movieAdapter
+            with(binding?.rvMovie) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = movieAdapter
             }
         }
     }

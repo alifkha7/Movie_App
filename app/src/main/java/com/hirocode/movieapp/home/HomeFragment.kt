@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hirocode.movieapp.R
 import com.hirocode.movieapp.core.data.Resource
-import com.hirocode.movieapp.core.domain.model.Movie
 import com.hirocode.movieapp.core.ui.MovieAdapter
 import com.hirocode.movieapp.databinding.FragmentHomeBinding
 import com.hirocode.movieapp.detail.DetailMovieActivity
@@ -19,16 +18,16 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by viewModel()
 
-    private lateinit var _binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,30 +45,30 @@ class HomeFragment : Fragment() {
             homeViewModel.movie.observe(viewLifecycleOwner) { movie ->
                 if (movie != null) {
                     when (movie) {
-                        is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Resource.Loading -> binding?.progressBar?.visibility = View.VISIBLE
                         is Resource.Success -> {
-                            binding.progressBar.visibility = View.GONE
+                            binding?.progressBar?.visibility = View.GONE
                             movie.data?.let { movieAdapter.setData(it) }
                         }
                         is Resource.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.viewError.root.visibility = View.VISIBLE
-                            binding.viewError.tvError.text = movie.message ?: getString(R.string.something_wrong)
+                            binding?.progressBar?.visibility = View.GONE
+                            binding?.viewError?.root?.visibility = View.VISIBLE
+                            binding?.viewError?.tvError?.text = movie.message ?: getString(R.string.something_wrong)
                         }
                     }
                 }
             }
 
-            with(binding.rvMovie) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = movieAdapter
+            with(binding?.rvMovie) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = movieAdapter
             }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding
+        _binding = null
     }
 }
